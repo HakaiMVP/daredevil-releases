@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daredevil — Comprar Licença</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#121316] text-gray-100 min-h-screen font-sans">
+
+    <div class="max-w-4xl mx-auto px-4 py-10 space-y-8">
+
+        <!-- Header -->
+        <div class="text-center space-y-3">
+            <h1 class="text-3xl font-bold tracking-wider text-[#e63946]">DAREDEVIL</h1>
+            <p class="text-sm text-gray-400">Adquira sua licença — pagamento via PIX ou cartão</p>
+        </div>
+
+        <!-- Proposta de valor -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+            <div class="bg-[#1c1f26] border border-[#2d323e] rounded-xl p-4 flex items-center gap-3">
+                <span class="text-2xl">⚡</span>
+                <div>
+                    <p class="font-bold text-gray-200">Entrega imediata</p>
+                    <p class="text-xs text-gray-500">Sua chave chega na hora do pagamento</p>
+                </div>
+            </div>
+            <div class="bg-[#1c1f26] border border-[#2d323e] rounded-xl p-4 flex items-center gap-3">
+                <span class="text-2xl">🔒</span>
+                <div>
+                    <p class="font-bold text-gray-200">Pagamento seguro</p>
+                    <p class="text-xs text-gray-500">PIX e cartão via ZuckPay</p>
+                </div>
+            </div>
+            <div class="bg-[#1c1f26] border border-[#2d323e] rounded-xl p-4 flex items-center gap-3">
+                <span class="text-2xl">🎮</span>
+                <div>
+                    <p class="font-bold text-gray-200">Acesso instantâneo</p>
+                    <p class="text-xs text-gray-500">Ativa em um único PC por chave</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner de manutenção (escondido quando tudo ok) -->
+        <div id="maintenanceBanner" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 text-sm text-amber-300"></div>
+
+        <!-- Passo 1: Planos -->
+        <div id="step-plans">
+            <h2 class="text-lg font-bold text-gray-200 mb-4">1. Escolha o plano</h2>
+            <div id="plansGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- renderizado via JS -->
+            </div>
+            <div class="flex justify-center mt-8">
+                <button id="goDetails" onclick="goDetails()" disabled class="bg-[#3d4454] text-white font-bold px-8 py-3 rounded-lg text-sm cursor-not-allowed opacity-50">Continuar</button>
+            </div>
+        </div>
+
+        <!-- Passo 2: Dados -->
+        <div id="step-details" class="hidden">
+            <h2 class="text-lg font-bold text-gray-200 mb-4">2. Seus dados</h2>
+            <div id="renewBanner" class="hidden bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-4 text-sm text-cyan-300 mb-4"></div>
+            <div id="selectedPlanInfo" class="bg-[#1c1f26] border border-[#2d323e] rounded-xl p-4 text-sm text-gray-300 mb-4"></div>
+            <form id="buyerForm" onsubmit="return false">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="flex flex-col gap-1 text-xs text-gray-400 sm:col-span-2">
+                        Nome completo
+                        <input id="nome" required minlength="3" class="bg-[#121418] border border-[#2d323e] rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[#e63946]">
+                    </label>
+                    <label class="flex flex-col gap-1 text-xs text-gray-400">
+                        E-mail
+                        <input id="email" type="email" required class="bg-[#121418] border border-[#2d323e] rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[#e63946]">
+                    </label>
+                    <label class="flex flex-col gap-1 text-xs text-gray-400">
+                        Telefone (com DDD)
+                        <input id="telefone" inputmode="numeric" required placeholder="11999998888" class="bg-[#121418] border border-[#2d323e] rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[#e63946]">
+                    </label>
+                    <label class="flex flex-col gap-1 text-xs text-gray-400">
+                        CPF (11 dígitos)
+                        <input id="cpf" inputmode="numeric" required maxlength="14" placeholder="000.000.000-00" class="bg-[#121418] border border-[#2d323e] rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[#e63946]">
+                    </label>
+                    <label class="flex flex-col gap-1 text-xs text-gray-400">
+                        Cupom de desconto (opcional)
+                        <input id="couponInput" placeholder="EX.: BEMVINDO30" class="bg-[#121418] border border-[#2d323e] rounded-lg px-3 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-[#e63946] uppercase">
+                    </label>
+                </div>
+                <div class="flex items-center justify-between gap-4 mt-6">
+                    <button onclick="goPlans()" type="button" class="bg-[#2d323e] hover:bg-[#3d4454] text-white text-xs font-bold px-5 py-2.5 rounded-lg transition">Voltar</button>
+                    <button id="createBtn" onclick="createCharge()" class="bg-[#c52828] hover:bg-[#e63946] text-white font-bold px-8 py-3 rounded-lg transition text-sm shadow-lg whitespace-nowrap">Gerar Pagamento</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Passo 3: Pagamento -->
+        <div id="step-pay" class="hidden">
+            <h2 class="text-lg font-bold text-gray-200 mb-4">3. Pague e receba sua chave</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-[#1c1f26] border border-[#2d323e] rounded-xl p-6 space-y-4">
+                    <div class="text-center">
+                        <img id="qrcodeImage" alt="QR Code PIX" class="mx-auto w-56 h-56 rounded-lg hidden">
+                        <div id="qrcodeText" class="hidden">
+                            <textarea id="qrcodeValue" readonly rows="4" class="w-full bg-[#121418] border border-[#2d323e] rounded-lg px-3 py-2 text-xs font-mono text-gray-300 focus:outline-none"></textarea>
+                            <button onclick="copyPix()" class="mt-2 bg-[#2d323e] hover:bg-[#3d4454] text-xs font-bold px-4 py-2 rounded-lg transition">Copiar PIX</button>
+                        </div>
+                        <div id="qrcodeLoading" class="py-16 text-gray-400 text-sm">Gerando cobrança...</div>
+                    </div>
+                    <div class="border-t border-[#2d323e] pt-4 space-y-2 text-sm text-gray-300">
+                        <p><span class="text-gray-500">Plano:</span> <span id="payPlanLabel"></span></p>
+                        <p><span class="text-gray-500">Valor:</span> <span id="payAmount" class="font-bold text-white"></span></p>
+                        <p id="payDiscountRow" class="hidden"><span class="text-gray-500">Desconto:</span> <span id="payDiscount" class="font-bold text-emerald-400"></span></p>
+                        <p><span class="text-gray-500">Pedido:</span> <span id="payOrderId" class="font-mono text-xs"></span></p>
+                    </div>
+                </div>
+
+                <div class="bg-[#1c1f26] border border-[#2d323e] rounded-xl p-6 space-y-4">
+                    <div id="statusBox">
+                        <p class="text-sm text-gray-300 mb-3">Aguardando pagamento...</p>
+                        <div class="w-full bg-[#2d323e] rounded-full h-2">
+                            <div id="statusBar" class="bg-[#e63946] h-2 w-0 rounded-full transition-all duration-700"></div>
+                        </div>
+                        <p id="statusTimer" class="text-xs text-gray-500 mt-3">Escaneie o QR ou clique em pagar com cartão.</p>
+                    </div>
+                    <a id="checkoutLink" href="#" target="_blank" rel="noopener" class="hidden block text-center bg-[#1677ff] hover:bg-[#1a86ff] text-white font-bold px-5 py-3 rounded-lg transition text-sm">Pagar com Cartão</a>
+                    <button onclick="backToDetails()" class="w-full text-xs text-gray-500 hover:text-gray-300 mt-2">Corrigir dados / trocar plano</button>
+
+                    <!-- SUCESSO -->
+                    <div id="successBox" class="hidden text-center space-y-4">
+                        <div class="text-5xl">✓</div>
+                        <p id="successTitle" class="text-lg font-bold text-emerald-400">Pagamento confirmado!</p>
+                        <p id="successSubtitle" class="text-sm text-gray-400">Sua chave de acesso:</p>
+                        <div class="bg-[#121418] border border-emerald-500/30 rounded-xl px-4 py-4 font-mono font-bold text-lg text-emerald-300 select-all" id="licenseKey"></div>
+                        <button onclick="copyKey()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-5 py-2.5 rounded-lg transition">Copiar chave</button>
+                        <p class="text-xs text-gray-500">Use a chave no login do Daredevil. Guarde-a com segurança.</p>
+                        <p class="text-xs text-cyan-400">Período renovado somado ao desta chave.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const FUNC_URL = "https://kbokdyxtnloupxcwdeeh.supabase.co/functions/v1/zuckpay-checkout";
+
+        let plans = [];
+        let selectedPlan = null;
+        let charge = null;
+        let pollTimer = null;
+        let pollCount = 0;
+
+        // Modo renovação: ?key=XXXX-XXXX-XXXX-XXXX&plan=30d
+        const urlParams = new URLSearchParams(window.location.search);
+        const renewKeyParam = (urlParams.get('key') || '').trim().toUpperCase();
+        const planParam = (urlParams.get('plan') || '').trim();
+
+        async function loadPlans() {
+            const banner = document.getElementById('maintenanceBanner');
+            const grid = document.getElementById('plansGrid');
+            try {
+                const res = await fetch(FUNC_URL + "?action=plans", { method: "POST" });
+                const data = await res.json();
+                if (data.success) {
+                    plans = data.plans;
+                    banner.classList.add('hidden');
+                    renderPlans();
+                } else {
+                    showMaintenance(data.reason);
+                    grid.innerHTML = '';
+                }
+            } catch (e) {
+                showMaintenance('Loja sem conexão agora. Tente novamente em instantes.');
+                grid.innerHTML = '';
+            }
+        }
+
+        function showMaintenance(msg) {
+            const banner = document.getElementById('maintenanceBanner');
+            banner.classList.remove('hidden');
+            banner.textContent = '⚠ ' + msg;
+        }
+
+        function renderPlans() {
+            const grid = document.getElementById('plansGrid');
+            grid.innerHTML = plans.map(p => `
+                <button onclick="selectPlan('${p.id}')" id="plan-${p.id}"
+                    class="text-left bg-[#1c1f26] border border-[#2d323e] hover:border-[#e63946] rounded-xl p-5 transition shadow-xl ${planParam && p.id === planParam ? 'border-[#e63946] bg-[#231416]' : ''}">
+                    <p class="font-bold text-gray-100">${p.label}</p>
+                    <p class="text-2xl font-bold text-white mt-2">R$ ${p.amount.toFixed(2).replace('.', ',')}</p>
+                    <p class="text-xs text-gray-500 mt-1">${p.days ? p.days + ' dias de acesso' : 'Acesso vitalício'}</p>
+                    ${planParam && p.id === planParam ? '<p class="text-[10px] text-cyan-400 font-bold mt-1">PRÉ-SELECIONADO</p>' : ''}
+                </button>
+            `).join('');
+            if (planParam) {
+                const found = plans.find(p => p.id === planParam);
+                if (found) {
+                    selectedPlan = found;
+                    const btn = document.getElementById('goDetails');
+                    btn.disabled = false;
+                    btn.classList.remove('cursor-not-allowed', 'opacity-50', 'bg-[#3d4454]');
+                    btn.classList.add('bg-[#c52828]', 'hover:bg-[#e63946]');
+                }
+            }
+            if (renewKeyParam) {
+                const banner = document.getElementById('renewBanner');
+                banner.classList.remove('hidden');
+                banner.innerHTML = `<b>Renovando a chave:</b> <span class="font-mono select-all">${renewKeyParam}</span> — seu período será somado ao atual desta chave.`;
+            }
+        }
+
+        function selectPlan(id) {
+            selectedPlan = plans.find(p => p.id === id);
+            document.querySelectorAll('#plansGrid > button').forEach(b => {
+                b.classList.remove('border-[#e63946]', 'bg-[#231416]');
+                b.classList.add('border-[#2d323e]');
+            });
+            document.getElementById('plan-' + id).classList.add('border-[#e63946]', 'bg-[#231416]');
+            const btn = document.getElementById('goDetails');
+            btn.disabled = false;
+            btn.classList.remove('cursor-not-allowed', 'opacity-50', 'bg-[#3d4454]');
+            btn.classList.add('bg-[#c52828]', 'hover:bg-[#e63946]');
+        }
+
+        function goDetails() {
+            if (!selectedPlan) return;
+            document.getElementById('step-plans').classList.add('hidden');
+            document.getElementById('step-details').classList.remove('hidden');
+            document.getElementById('selectedPlanInfo').innerHTML =
+                `<b class="text-white">${selectedPlan.label}</b> — <span class="font-bold text-emerald-300">R$ ${selectedPlan.amount.toFixed(2).replace('.', ',')}</span>`;
+        }
+
+        function goPlans() {
+            document.getElementById('step-details').classList.add('hidden');
+            document.getElementById('step-plans').classList.remove('hidden');
+        }
+
+        async function createCharge() {
+            const nome = document.getElementById('nome').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const telefone = document.getElementById('telefone').value.trim();
+            const cpf = document.getElementById('cpf').value.trim();
+            const coupon = document.getElementById('couponInput').value.trim().toUpperCase();
+
+            const createBtn = document.getElementById('createBtn');
+            createBtn.disabled = true;
+            createBtn.textContent = 'Gerando...';
+
+            try {
+                const res = await fetch(FUNC_URL + "?action=create", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        plan: selectedPlan.id,
+                        nome, email, telefone, cpf,
+                        coupon: coupon || undefined,
+                        key: renewKeyParam || undefined
+                    })
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    const reason = data.reason || 'Erro desconhecido';
+                    if (reason.includes('ZUCKPAY_CLIENT_ID')) {
+                        showMaintenance('⚠ A loja ainda não está configurada com as credenciais de pagamento. Tente novamente em breve.');
+                    } else {
+                        alert('Erro: ' + reason);
+                    }
+                    return;
+                }
+                charge = data.charge;
+                selectedPlan.amount = charge.amount;
+
+                document.getElementById('step-details').classList.add('hidden');
+                document.getElementById('step-pay').classList.remove('hidden');
+
+                document.getElementById('payPlanLabel').textContent = charge.plan_label;
+                document.getElementById('payAmount').textContent = 'R$ ' + charge.amount.toFixed(2).replace('.', ',');
+                document.getElementById('payOrderId').textContent = charge.order_id;
+
+                if (charge.discount_code && charge.discount_amount > 0) {
+                    document.getElementById('payDiscountRow').classList.remove('hidden');
+                    document.getElementById('payDiscount').textContent =
+                        'R$ ' + charge.discount_amount.toFixed(2).replace('.', ',') + ' (cupom ' + charge.discount_code + ')';
+                }
+
+                if (charge.qrcode_image) {
+                    document.getElementById('qrcodeImage').src = charge.qrcode_image;
+                    document.getElementById('qrcodeImage').classList.remove('hidden');
+                }
+                if (charge.qrcode) {
+                    document.getElementById('qrcodeValue').value = charge.qrcode;
+                    document.getElementById('qrcodeText').classList.remove('hidden');
+                }
+                document.getElementById('qrcodeLoading').classList.add('hidden');
+
+                if (charge.checkout_url) {
+                    const link = document.getElementById('checkoutLink');
+                    link.href = charge.checkout_url;
+                    link.classList.remove('hidden');
+                }
+
+                startPolling();
+            } catch (e) {
+                alert('Erro de rede: ' + e.message);
+            } finally {
+                createBtn.disabled = false;
+                createBtn.textContent = 'Gerar Pagamento';
+            }
+        }
+
+        function startPolling() {
+            stopPolling();
+            pollCount = 0;
+            pollTimer = setInterval(async () => {
+                pollCount++;
+                const elapsed = Math.floor(pollCount * 3);
+                const m = Math.floor(elapsed / 60);
+                const s = elapsed % 60;
+                document.getElementById('statusTimer').textContent =
+                    'Aguardando confirmação... (' + m + 'm' + (s < 10 ? '0' : '') + s + 's)';
+                document.getElementById('statusBar').style.width = Math.min((pollCount * 1.5), 95) + '%';
+
+                try {
+                    const res = await fetch(FUNC_URL + "?action=status", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ external_id: charge.order_id })
+                    });
+                    const data = await res.json();
+                    if (data.success && data.status === 'PAID' && data.license_key) {
+                        onPaid(data.license_key);
+                    } else if (data.success && (data.status === 'EXPIRED' || data.status === 'FAILED' || data.status === 'REFUNDED')) {
+                        stopPolling();
+                        document.getElementById('statusTimer').textContent =
+                            'Cobrança ' + data.status.toLowerCase() + '. Clique em voltar para gerar um novo pagamento.';
+                    }
+                } catch (e) {
+                    // mantém polling
+                }
+            }, 3000);
+        }
+
+        function stopPolling() {
+            if (pollTimer) clearInterval(pollTimer);
+            pollTimer = null;
+        }
+
+        function onPaid(key) {
+            stopPolling();
+            document.getElementById('statusBox').classList.add('hidden');
+            document.getElementById('checkoutLink').classList.add('hidden');
+            document.getElementById('licenseKey').textContent = key;
+            if (renewKeyParam) {
+                document.getElementById('successTitle').textContent = 'Renovação confirmada!';
+                document.getElementById('successSubtitle').textContent = 'Sua chave (que agora vale por mais tempo):';
+            }
+            document.getElementById('successBox').classList.remove('hidden');
+        }
+
+        function backToDetails() {
+            stopPolling();
+            document.getElementById('step-pay').classList.add('hidden');
+            document.getElementById('step-details').classList.remove('hidden');
+        }
+
+        function copyPix() {
+            const v = document.getElementById('qrcodeValue').value;
+            navigator.clipboard.writeText(v).then(() => alert('PIX copiado!'));
+        }
+
+        function copyKey() {
+            const v = document.getElementById('licenseKey').textContent;
+            navigator.clipboard.writeText(v).then(() => alert('Chave copiada!'));
+        }
+
+        // Formatação simples de CPF
+        document.getElementById('cpf').addEventListener('input', function () {
+            let v = this.value.replace(/\D/g, '').slice(0, 11);
+            let out = v;
+            if (v.length > 9) out = v.slice(0, 3) + '.' + v.slice(3, 6) + '.' + v.slice(6, 9) + '-' + v.slice(9);
+            else if (v.length > 6) out = v.slice(0, 3) + '.' + v.slice(3, 6) + '.' + v.slice(6);
+            else if (v.length > 3) out = v.slice(0, 3) + '.' + v.slice(3);
+            this.value = out;
+        });
+
+        loadPlans();
+    </script>
+</body>
+</html>
